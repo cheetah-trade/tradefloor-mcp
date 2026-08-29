@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+
+      # --no-cache is load-bearing, not caution. uv keys its built-archive cache
+      # on the package version, so with a stable version number a matrix run
+      # happily tests a stale build and goes green by construction. That is
+      # exactly what happened during development and it hid a real failure.
+      - name: Test on Python ${{ matrix.python }}
+        run: >
+          uv run --python ${{ matrix.python }} --isolated --no-cache
+          --with pytest --with pytest-asyncio --with .
+          pytest tests/ -q
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv run --no-cache ruff check .
+
+  engine-is-generated:
+    # src/tradefloor_mcp/engine/ is extracted from the TradeFloor monorepo, where
+    # the same code is a money path. The sync is one-way by design, so a change
+    # arriving through a pull request here has to be refused: it would either be
+    # silently overwritten by the next extract, or worse, not be.
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Refuse edits to the generated engine
+        run: |
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD \
+                    -- src/tradefloor_mcp/engine/)
+          if [ -n "$changed" ]; then
+            echo "::error::This directory is generated from the TradeFloor monorepo"
+            echo "and cannot be changed here. Files touched:"
+            echo "$changed"
+            echo
+            echo "Open an issue describing the behaviour instead: the fix has to"
+            echo "land upstream, where the same code is on a trading path, and it"
+            echo "arrives here on the next extract."
+            exit 1
+          fi
+          echo "engine/ untouched"

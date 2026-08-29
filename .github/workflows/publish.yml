@@ -1,0 +1,48 @@
+name: Publish
+
+# Releases are cut by pushing a tag. Trusted Publishing (OIDC) means no API
+# token is stored anywhere: PyPI verifies the workflow identity instead. One
+# setup step on PyPI, then nothing to rotate and nothing to leak.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+
+      # A release must not be the first time the matrix runs. --no-cache for the
+      # reason documented in ci.yml: without it uv can serve a stale build.
+      - name: Test before publishing
+        run: >
+          uv run --python 3.11 --isolated --no-cache
+          --with pytest --with pytest-asyncio --with .
+          pytest tests/ -q
+
+      - name: Build
+        run: uv build
+
+      - name: Check the distributions
+        run: uv run --with twine --no-project twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # what Trusted Publishing signs with
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

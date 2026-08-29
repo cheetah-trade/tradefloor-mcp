@@ -1,0 +1,60 @@
+[project]
+name = "tradefloor-mcp"
+version = "0.1.0"
+description = "Smart-money market structure (ChoCh/BOS, liquidity sweeps, FVG/OB, pullback zones) as an MCP server. The same engine that runs in production at TradeFloor."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "TradeFloor" }]
+keywords = [
+    "mcp", "model-context-protocol", "trading", "market-structure",
+    "smart-money-concepts", "smc", "ict", "choch", "bos",
+    "liquidity-sweep", "order-block", "fair-value-gap", "technical-analysis",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+    "mcp>=2.1",
+]
+
+[project.urls]
+# The UTM is the whole attribution story: this package never calls home, so a
+# tagged click is the only signal that the channel is doing anything.
+Homepage = "https://tradefloor.co/?utm_source=pypi&utm_medium=oss&utm_campaign=tradefloor-mcp"
+Source = "https://github.com/cheetah-trade/tradefloor-mcp"
+Issues = "https://github.com/cheetah-trade/tradefloor-mcp/issues"
+
+[project.scripts]
+tradefloor-mcp = "tradefloor_mcp.__main__:main"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tradefloor_mcp"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# The engine/ directory is a machine-generated extract of the TradeFloor
+# monorepo. It is linted there, and reformatting it here would break the
+# drift gate that keeps the two byte-identical.
+exclude = ["src/tradefloor_mcp/engine/*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"

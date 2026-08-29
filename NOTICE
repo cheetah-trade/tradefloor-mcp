@@ -1,0 +1,10 @@
+tradefloor-mcp
+Copyright 2026 TradeFloor
+
+This product includes software developed at TradeFloor (https://tradefloor.co).
+
+The contents of src/tradefloor_mcp/engine/ are extracted verbatim from the
+TradeFloor production monorepo. That directory is generated: the monorepo is
+the source of truth and a CI gate keeps the two byte-identical, so pull
+requests against it cannot be merged. Everything else in this repository is
+authored here and contributions are welcome.
