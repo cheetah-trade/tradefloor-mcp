@@ -1,0 +1,24 @@
+# Owner queue of tradefloor-mcp (counted 2026-10-12 11:51 from Task Floor's records; counts only)
+
+Everything that waits for the owner's decision. A signal only: nothing is held or delayed by it. Pull request waits to merge and the owner's nudges are in the Delivery report.
+
+| Department | Items | Oldest h | Inbox questions | Knowledge proposals | Open asks | Proposed backlog items | Draft artifacts | Open pull requests | Promotions | Other Inbox items |
+|---|---|---|---|---|---|---|---|---|---|---|
+| — | 0 | — | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Oldest: —.
+Organisation and house (not tied to a project): nothing waits.
+All projects: 196 items (inbox questions 33, knowledge proposals 28, proposed backlog items 55, draft artifacts 7, open pull requests 17, other inbox items 56); oldest 59.9 h (Proposed backlog items: Интеграция Dakota).
+With the knowledge curator, not the owner's yet: 12 lessons.
+
+## Owner decisions per day
+
+| Date | Decisions | Inbox | asks | backlog | artifacts | pull requests |
+|---|---|---|---|---|---|---|
+| 2026-10-06 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-07 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-08 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-09 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-10 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-11 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 2026-10-12 | 0 | 0 | 0 | 0 | 0 | 0 |
